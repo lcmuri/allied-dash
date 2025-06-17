@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
+use App\Filament\Resources\AtcCodeResource\Pages;
+use App\Filament\Resources\AtcCodeResource\RelationManagers;
+use App\Models\AtcCode;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,64 +13,40 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CategoryResource extends Resource
+class AtcCodeResource extends Resource
 {
-    protected static ?string $model = Category::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $model = AtcCode::class;
 
     protected static ?string $navigationGroup = 'Inventory Management'; // This groups it under Inventory Management
     // protected static ?string $navigationLabel = 'Manage Medicines'; // This becomes the parent
     protected static ?string $navigationParentItem = 'Medicines';
-
-    // protected static ?string $navigationGroup = 'Inventory Management';
-
-    // protected static ?string $navigationParentItem = 'Manage Medicines';
-
+    protected static ?string $navigationIcon = 'heroicon-o-code-bracket';
+    // protected static ?int $navigationSort = 3; // Adjust position
+    // Ensure navigation is enabled
+    // protected static bool $shouldRegisterNavigation = true;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('parent_id')
+                    ->numeric(),
                 Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\TextInput::make('code')
+                    ->required(),
+                Forms\Components\TextInput::make('level')
                     ->required()
-                    ->maxLength(255),
-
+                    ->numeric(),
                 Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true),
-
-                // Forms\Components\Select::make('parent_id')
-                //     ->label('Parent Category')
-                //     ->options(function (?Category $record) {
-                //         $query = Category::query();
-
-                //         if ($record) {
-                //             // Prevent selecting self or descendants as parent
-                //             $descendantIds = $record->descendants()->pluck('id');
-                //             $query->whereNotIn('id', $descendantIds)
-                //                 ->where('id', '!=', $record->id);
-                //         }
-
-                //         return $query->pluck('name', 'id');
-                //     })
-                //     ->searchable()
-                //     ->preload()
-                //     ->nullable()
-                //     ->helperText('Leave empty to make this a root category'),
-
-                SelectTree::make('parent_id')
-                    ->label('Parent Category')
-                    ->enableBranchNode()
-                    ->withCount()
-                    ->emptyLabel('Oops, no results have been found!')
-                    ->relationship('parent', 'name', 'parent_id')
-                    ->searchable(),
-
+                    ->required(),
+                Forms\Components\TextInput::make('status')
+                    ->required(),
                 Forms\Components\Textarea::make('description')
-                    ->maxLength(65535)
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('created_by'),
+                Forms\Components\TextInput::make('updated_by'),
+                Forms\Components\TextInput::make('deleted_by'),
             ]);
     }
 
@@ -84,12 +59,25 @@ class CategoryResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('code')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
+                Tables\Columns\TextColumn::make('level')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('created_by')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('updated_by')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('deleted_by')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -122,10 +110,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            // 'index' => Pages\TreeView::route('/'),
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListAtcCodes::route('/'),
+            'create' => Pages\CreateAtcCode::route('/create'),
+            'edit' => Pages\EditAtcCode::route('/{record}/edit'),
         ];
     }
 }

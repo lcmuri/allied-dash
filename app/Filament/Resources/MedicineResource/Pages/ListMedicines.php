@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Medicine\Resources\MedicineResource\Pages;
+namespace App\Filament\Resources\MedicineResource\Pages;
 
-use App\Filament\Clusters\Medicine\Resources\MedicineResource;
+use App\Filament\Resources\MedicineResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

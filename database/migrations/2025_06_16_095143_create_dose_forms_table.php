@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\ActiveStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('dose_forms', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->string('name');
-            $table->string('slug')->nullable();
-            $table->text('description')->nullable();
-            $table->string('status')->default(ActiveStatus::Active->value);
+            $table->string('name'); // e.g., "Tablet", "Syrup"
+            $table->text('description')->nullable(); // Optional description field
+            // $table->string('route_administration')->nullable(); // e.g., "Oral", "Topical"
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('dose_forms');
     }
 };

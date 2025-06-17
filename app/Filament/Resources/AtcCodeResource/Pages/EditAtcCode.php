@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\AtcCode\Resources\AtcCodeResource\Pages;
+namespace App\Filament\Resources\AtcCodeResource\Pages;
 
-use App\Filament\Clusters\AtcCode\Resources\AtcCodeResource;
+use App\Filament\Resources\AtcCodeResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
